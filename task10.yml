@@ -1,0 +1,53 @@
+- hosts: 
+        - 192.168.43.33
+          #- 192.168.43.39
+  tasks:
+        - yum_repository:
+                name: docker-ce-a.repo
+                description: docker url yum repo
+                baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+                gpgcheck: no       
+
+        - name: "installing docker-ce"
+          command: yum install docker-ce --nobest -y
+
+        - name: "starting docker "
+          service:
+                name: docker
+                state: restarted
+
+        - name: "Installing python3"
+          package:
+                  name: python3
+                  state: present
+
+        - name: "Installing docker SDK for python"
+          pip:
+                  name: docker
+
+        - name: "Pulling docker image for httpd"
+          community.docker.docker_image:
+                  name: httpd
+                  source: pull
+
+        - name: "Launching docker container with that image"
+          community.docker.docker_container:
+                  name: web1
+                  image: vimal13/apache-webserver-php
+                  state: started 
+                  #recreate: yes
+                  restart: yes
+                  detach: yes 
+                  exposed_ports:
+                          - "80"
+                  ports:
+                          - "2000:80"
+
+        - copy:
+                content: "TASK 10 !! completed"
+                dest: /root/ansible.html
+
+        - name: "Copying html file to container"
+          command: docker cp /root/ansible.html  web1:/var/www/html/
+
+

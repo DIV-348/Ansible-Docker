@@ -1,6 +1,8 @@
 # TASK-10
 YAML file for ANSIBLE TASK-10
-TASK 10 --
+
+
+TASK description --
 
 /Write an Ansible PlayBook that does the 
 following operations in the managed nodes:
